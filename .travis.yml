@@ -2,7 +2,7 @@ services:
     - docker
 
 before_install:
-    - docker build -f ./client/dev.Dockerfile -t gabrielade/react-test ./client
+    - docker build -t gabrielade/react-test -f ./client/dev.Dockerfile ./client
  
 script:
     - docker run -e CI=true gabrielade/react-test npm run test
