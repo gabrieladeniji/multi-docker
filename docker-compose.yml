@@ -1,0 +1,57 @@
+version: '3'
+services: 
+    postgres:
+        image: 'postgres:latest'
+        restart: always
+        environment: 
+            POSTGRES_PASSWORD: myNewPassword
+    redis:
+        image: 'redis:latest'
+    nginx:
+        restart: always
+        build: 
+            context: ./nginx
+            dockerfile: dev.Dockerfile
+        depends_on: 
+            - api
+            - client    
+        ports: 
+            - '3050:80'    
+    api:
+        build: 
+            context: ./server
+            dockerfile: dev.Dockerfile
+        volumes: 
+            - /app/node_modules
+            - ./server:/app
+        depends_on:
+            - postgres
+            - redis   
+        environment: 
+            - REDIS_HOST=redis  
+            - REDIS_PORT=6379
+            - PGUSER=postgres
+            - PGHOST=postgres
+            - PGDATABASE=postgres
+            - PGPASSWORD=myNewPassword
+            - PGPORT=5432
+    client:
+        stdin_open: true
+        build: 
+            context: ./client
+            dockerfile: dev.Dockerfile
+        volumes: 
+            - /app/node_modules
+            - ./client:/app
+    worker:
+        build: 
+            context: ./worker
+            dockerfile: dev.Dockerfile    
+        volumes: 
+            - /app/node_modules #preserve node_modules folder in container from getting updated with local dir node_modules
+            - ./worker:/app
+        depends_on:
+            - redis    
+        environment: 
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379         
