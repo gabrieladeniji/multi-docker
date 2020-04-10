@@ -20,3 +20,16 @@ after_success:
     - docker push gabrielade/multi-server
     - docker push gabrielade/multi-worker
 
+deploy:
+    # edge: true # forcing Travis to use the v2 (experimental) version of the dpl script which does not have the bug.
+    provider: elasticbeanstalk
+    region: "us-east-2"
+    app: "multi-docker"
+    env: "MultiDocker-env"
+    bucket_name: "elasticbeanstalk-us-east-2-986991386050"
+    bucket_path: "docker-multi"
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    on:
+        branch: master    
+

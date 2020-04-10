@@ -4,7 +4,7 @@ services:
         image: 'postgres:latest'
         restart: always
         environment: 
-            POSTGRES_PASSWORD: myNewPassword
+            POSTGRES_PASSWORD: postgrespassword
     redis:
         image: 'redis:latest'
     nginx:
@@ -33,7 +33,7 @@ services:
             - PGUSER=postgres
             - PGHOST=postgres
             - PGDATABASE=postgres
-            - PGPASSWORD=myNewPassword
+            - PGPASSWORD=postgrespassword
             - PGPORT=5432
     client:
         stdin_open: true
